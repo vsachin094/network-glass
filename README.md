@@ -22,7 +22,7 @@ Network Looking Glass is a Flask-based web application that provides a "looking 
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/yourusername/network-looking-glass.git
+   git clone https://github.com/vsachin094/network-looking-glass.git
    cd network-looking-glass
    ```
 
