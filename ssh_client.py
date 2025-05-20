@@ -1,10 +1,11 @@
 import paramiko
 import time
 
-class SSH_Client():
+
+class SSH_Client:
 
     def __init__(self, router):
-        ch = router['address']
+        ch = router["address"]
         # check if we need to ssh from a jump server
         # if router['jumpserver']:
         #     # initialize jump server Transport object
@@ -26,7 +27,7 @@ class SSH_Client():
         # negotiate ssh session with the router
         self.transport.start_client()
         # authenticate to the router
-        self.transport.auth_password(router['usern'], router['passw'])
+        self.transport.auth_password(router["usern"], router["passw"])
         # wait for client to authenticate to router
         while not self.transport.is_authenticated():
             time.sleep(0.1)
@@ -45,4 +46,3 @@ class SSH_Client():
     def close(self):
         # making sure we close session and not just the channel
         self.transport.close()
-

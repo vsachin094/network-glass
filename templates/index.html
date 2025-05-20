@@ -1,6 +1,6 @@
 <!doctype html>
 <head>
-  <title>Network Glass</title>
+  <title>Network Looking Glass</title>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -13,7 +13,7 @@
   <nav class="navbar navbar-expand-lg bg-rose">
     <div class="container">
       <div class="navbar-translate">
-        <a class="navbar-brand" style="font-size:35px" href="http://networkglass.com">Network Glass</a>
+        <a class="navbar-brand" style="font-size:35px">Network Looking Glass</a>
       </div>
       <div class="collapse navbar-collapse"></div>
     </div>
@@ -24,7 +24,7 @@
       <div class="col-md-6 col-xs-12 col-sm-12">
         <div class="card card-nav-tabs">
           <div class="card-header card-header-rose">
-          <h3 class="card-title" style="text-align:center;padding-bottom:5px;font-family:'Roboto';font-weight:100">Looking Glass</h3>
+          <h3 class="card-title" style="text-align:center;padding-bottom:5px;font-family:'Roboto';font-weight:100">Network Looking Glass</h3>
           </div>
           <div class="card-body">
             <form onsubmit="return false" name="queryform" id="lgForm">
@@ -48,17 +48,27 @@
                   <span class="circle"><span class="check"></span></span>
                 </label>
               </div>
+              <div class="form-check form-check-radio form-check-inline" style="padding-right:40px">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" name="cmd" value="custom" id="customCmdRadio"> Custom Command
+                  <span class="circle"><span class="check"></span></span>
+                </label>
+              </div>
             </div>
+              <div class="form-group" id="customCmdInput" style="display:none; padding-bottom: 20px">
+                <label for="customCmd">Enter Command</label>
+                <input type="text" class="form-control" id="customCmd" placeholder="e.g. show interfaces">
+              </div>
 
               <div class="form-group" style="padding-bottom: 20px">
                 <label for="ipprefix">IP / Prefix</label>
-                <input id="ipprefix" class="form-control" id="ipprefix" placeholder="e.g. 8.8.8.8" style="color:#e91f62;font-size:23px">
+                <input id="ipprefix" class="form-control" id="ipprefix" placeholder="e.g. 8.8.8.8" style="color:#4aa7e6;font-size:23px">
               </div>
 
               <!-- This is the network/ASN dropdown, edit to fit your network-->
               <div class="form-group" style="padding-bottom: 20px">
                 <label for="network">Network</label>
-                <select name="network" id="network" class="form-control selectpicker" data-style="btn btn-link" style="color:#e91f62;font-size:22px">
+                <select name="network" id="network" class="form-control selectpicker" data-style="btn btn-link" style="color:#4aa7e6;font-size:22px">
                   <option disabled selected></option>
                   <option value="" disabled selected> </option>
                   <option value="65532">Test - AS65532</option>
@@ -70,7 +80,7 @@
               <!-- This is the routers dropdown, it will get populated by the GET /routers call-->
               <div class="form-group" style="padding-bottom: 20px">
                 <label for="router">Router</label>
-                <select id="router" class="form-control selectpicker" data-style="btn btn-link" style="color:#e91f62;font-size:22px">
+                <select id="router" class="form-control selectpicker" data-style="btn btn-link" style="color:#4aa7e6;font-size:22px">
                   <option value="" disabled selected></option>
                 </select>
               </div> <!-- End of routers dropdown -->
@@ -92,7 +102,7 @@
               <pre id="queryInfo" style="font-size:13px;margin-bottom:0px">
               </pre>
                   <div class="fa-3x" style="text-align:center">
-                    <i id="loading" class="fa fa-spinner fa-spin" style="color:#e91f62;display:none;padding-top:10px"></i>
+                    <i id="loading" class="fa fa-spinner fa-spin" style="color:#4aa7e6;display:none;padding-top:10px"></i>
                   </div>
               <pre id="results" style="font-size:12px;overflow:visible">
               </pre>

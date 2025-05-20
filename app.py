@@ -4,62 +4,81 @@ import helpers
 import json
 import routers
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_url_path="/static")
+
 
 # main route where we render the html
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def home():
-    return render_template('index.html')
+    return render_template("index.html")
+
 
 # GET route in order to fetch the available routers for a given ASN
-@app.route('/routers/<asn>', methods=['GET'])
+@app.route("/routers/<asn>", methods=["GET"])
 def get_routers(asn):
-  results = []
-  for r in routers.routers_list:
-    if r['asn'] == asn:
-      # only return the address/hostname, the location and the OS type of the matching routers
-    #   results.append(dict(name=r['address'][0],
-    #                       location=r['address'],
-    #                       type=r['type'])
-    #   )
-        router=r['address'][0]
-        # print(router)
-        results.append(dict(name=r['address'][0],router=router,type=r['type'],cmds="test cmd"))
-  return json.dumps(results) 
+    results = []
+    for r in routers.routers_list:
+        if r["asn"] == asn:
+            # only return the address/hostname, the location and the OS type of the matching routers
+            #   results.append(dict(name=r['address'][0],
+            #                       location=r['address'],
+            #                       type=r['type'])
+            #   )
+            router = r["address"][0]
+            # print(router)
+            results.append(
+                dict(
+                    name=r["address"][0], router=router, type=r["type"], cmds="test cmd"
+                )
+            )
+    return json.dumps(results)
 
 
 # POST route in order to invoke the looking glass service
-@app.route('/lg', methods=['POST'])
+
+@app.route("/lg", methods=["POST"])
 def lg():
-    # get parameters from the request body
     req_data = request.get_json()
     print(req_data)
-    # obtain the router object and the ready-to-enter command
-    router, command = helpers.get_vars(req_data['router'], req_data['cmd'], req_data['ipprefix'])
-    print(router,command)
-    # instantiate our SSH_Client class
+
+    # Find the full router dict by name/address
+    def find_router(router_name):
+        for r in routers.routers_list:
+            if r["address"][0] == router_name or r.get("name") == router_name:
+                return r
+        return None
+
+    if req_data.get("cmd") == "custom" and req_data.get("customCmd"):
+        router = find_router(req_data["router"])
+        command = req_data["customCmd"]
+    else:
+        router, command = helpers.get_vars(
+            req_data["router"], req_data["cmd"], req_data["ipprefix"]
+        )
+
+    if not router:
+        return Response("Router not found", status=404)
+
+    print(router, command)
     client = ssh_client.SSH_Client(router)
     print(client)
-    # run the command
     output_stream = client.run(command)
-    # print(output_stream)
-    # generator function
+
     def generate():
         for chunk in output_stream:
             yield chunk
-        # close the underlaying transport session of the ssh client
         client.close()
-    
-    # each yield iteration  in generate() is sent directly to the browser
+
     return Response(generate())
 
-@app.route('/cmds', methods=['POST'])
+
+@app.route("/cmds", methods=["POST"])
 def cmds():
-    
-    return {'id':"Test Data from backend" }
+
+    return {"id": "Test Data from backend"}
     # return("testing for the cmd return!")
-    # # get 
+    # # get
 
-if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0', port=5000,threaded=True)
 
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000, threaded=True)

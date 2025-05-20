@@ -16,6 +16,17 @@ $('#network').on('change', () => {
 }
 )
 
+$(document).ready(function() {
+  $('input[name="cmd"]').change(function() {
+    if ($('#customCmdRadio').is(':checked')) {
+      $('#customCmdInput').show();
+      $('#ipprefix').closest('.form-group').hide(); // Hide IP/Prefix
+    } else {
+      $('#customCmdInput').hide();
+      $('#ipprefix').closest('.form-group').show(); // Show IP/Prefix
+    }
+  });
+});
 function updateRouters (routers) {
   console.log("routers:::::::::",routers )
   $('#router').empty();
@@ -57,7 +68,13 @@ var submitForm = function() {
   var router = $('#router option:selected').val();
   var ipprefix = $('#ipprefix').val();
   var routerType = $('#router option:selected').attr('type');
-  var command = getCommandSyntax(cmd, routerType, ipprefix);
+  var command = "";
+
+  if (cmd === "custom") {
+    command = $('#customCmd').val();
+  } else {
+    command = getCommandSyntax(cmd, routerType, ipprefix);
+  }
 
   $('#results').text("")
   $('#queryInfo').text("")
@@ -66,18 +83,17 @@ var submitForm = function() {
   <b>Network: </b> ${$("#network option:selected").text()}
   <b>Router: </b> ${router}
   <b>Command: </b> ${command}`)
-  
+
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/lg', true);
   xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-  xhr.send(JSON.stringify({router: router, cmd: cmd, ipprefix: ipprefix}));
-  
+  xhr.send(JSON.stringify({router: router, cmd: cmd, ipprefix: ipprefix, customCmd: command}));
+
   xhr_timer = window.setInterval(function() {
     if (xhr.readyState == XMLHttpRequest.DONE) {
       $('#loading').hide();
       window.clearTimeout(xhr_timer);
     }
-    // alert(xhr.responseText)
     document.getElementById('results').innerHTML = xhr.responseText;
   }, 500);
 
@@ -110,6 +126,7 @@ function getCommandSyntax(cmd, routerType, ipprefix) {
       }
   }
 }
+
 
 // function getCommandSyntax(cmd,routerType,ipprefix){
 
